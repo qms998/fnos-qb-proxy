@@ -1,14 +1,15 @@
 services:
   fnos-qbit-proxy:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    image: fnos-qb-proxy:arm64
     container_name: fnOS-qBit-Proxy
     pid: "host"
     network_mode: "bridge"
     environment:
       - PASSWORD=fnosnb
+      - PORT=8086
     ports:
       - "7777:8086"
     volumes:
-      - /home/Qiqi/qbt.sock:/app/qbt.sock
+      # 挂载有效 sock 路径：宿主机的 /usr/trim/var/downloadcenter/1000/qbt.sock → 容器内同路径
+      - /usr/trim/var/downloadcenter/1000/qbt.sock:/usr/trim/var/downloadcenter/1000/qbt.sock
+    restart: unless-stopped

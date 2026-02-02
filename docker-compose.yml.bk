@@ -1,0 +1,22 @@
+services:
+  fnos-qbit-proxy:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      # 【新增】强制指定 ARM64 架构，适配你的 Debian ARM64 系统
+      platform: linux/arm64
+    container_name: fnOS-qBit-Proxy
+    pid: "host"
+    network_mode: "bridge"
+    environment:
+      - PASSWORD=fnosnb
+      # 【可选新增】指定端口（和 Dockerfile 中的 PORT=8086 保持一致，避免冲突）
+      - PORT=8086
+      # 【可选新增】指定 sock 文件路径（和挂载路径对应）
+      - UDS=/app/qbt.sock
+    ports:
+      - "7777:8086"
+    volumes:
+      - /home/Qiqi/qbt.sock:/app/qbt.sock
+    # 【新增】容器异常时自动重启，提升稳定性（推荐）
+    restart: unless-stopped
